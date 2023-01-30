@@ -12,11 +12,15 @@ import {
   Text,
   Divider,
   IconButton,
+  Badge,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import React from "react";
 
-const TaskList = () => {
+const TaskList = ({ taskList, setTaskList }) => {
+  const handleClearAll = () => {
+    setTaskList([]);
+  };
+
   return (
     <Box p={4}>
       <Flex alignItems="center">
@@ -24,37 +28,44 @@ const TaskList = () => {
           <Heading as="h4" size="md">
             Tasks
           </Heading>
-          <Box bg="gray.100">10</Box>
+          <Badge colorScheme="green" fontSize="1em">
+            {taskList.length}
+          </Badge>
         </HStack>
         <Spacer />
-        <Button colorScheme="green">Clear All</Button>
+        <Button colorScheme="green" variant="outline" size="sm" onClick={handleClearAll}>
+          Clear All
+        </Button>
       </Flex>
 
       <Divider mt={4} mb={6} />
 
       <SimpleGrid columns={4} minChildWidth="300px" spacing="10px" mt={2}>
-        <Card borderLeft="4px" borderColor="green.400" bg="white">
-          <CardHeader>
-            <Flex alignItems="top">
-              <Box>
-                <Heading as="h5" size="sm">
-                  Task Name
-                </Heading>
-                <Text color="gray.400" fontSize="sm" mt={1}>
-                  Date 2023/01/30 10:26PM
-                </Text>
-              </Box>
-              <Spacer />
-              <HStack alignItems="top">
-                <IconButton aria-label="Search database" size="sm" icon={<EditIcon />} />
-                <IconButton aria-label="Search database" size="sm" icon={<DeleteIcon />} />
-              </HStack>
-            </Flex>
-          </CardHeader>
-          <CardBody color="gray.500" pt={0}>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Temporibus, veritatis. Dicta eum omnis tenetur nam
-          </CardBody>
-        </Card>
+        {/*-- Task Loop Begin Here --*/}
+        {taskList.map((task) => (
+          <Card key={task.id} borderLeft="4px" borderColor={task.priority} bg="white">
+            <CardHeader>
+              <Flex alignItems="top">
+                <Box>
+                  <Heading as="h5" size="sm">
+                    {task.title}
+                  </Heading>
+                  <Text color="gray.400" fontSize="sm" mt={1}>
+                    Date {task.date} : {task.time}
+                  </Text>
+                </Box>
+                <Spacer />
+                <HStack alignItems="top">
+                  <IconButton aria-label="Search database" size="sm" icon={<EditIcon />} />
+                  <IconButton aria-label="Search database" size="sm" icon={<DeleteIcon />} />
+                </HStack>
+              </Flex>
+            </CardHeader>
+            <CardBody color="gray.500" pt={0}>
+              {task.description}
+            </CardBody>
+          </Card>
+        ))}
       </SimpleGrid>
     </Box>
   );
